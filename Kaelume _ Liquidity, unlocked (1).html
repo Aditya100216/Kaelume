@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kaelume | Liquidity, unlocked</title>
+<meta name="description" content="Kaelume is a non-custodial money market. Supply once, borrow against it, and see your risk before it matters.">
+<style>
+:root{--bg:#05070f;--surface:#0c1224;--ink:#eaf0ff;--muted:#8d9bc0;--line:#1b2646;--a:#5b8cff;--b:#7cf5ff;--c:#a78bfa;--ok:#34d399;--warn:#f59e0b;--bad:#f87171;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f7ff;--surface:#fff;--ink:#0b1b3a;--muted:#55648a;--line:#dbe3f5;--a:#2f5fe8;--b:#0ea5c6;--c:#7c5ce6;--ok:#0f8a5f;--warn:#d97706;--bad:#dc2626;color-scheme:light}}
+:root[data-theme="light"]{--bg:#f4f7ff;--surface:#fff;--ink:#0b1b3a;--muted:#55648a;--line:#dbe3f5;--a:#2f5fe8;--b:#0ea5c6;--c:#7c5ce6;--ok:#0f8a5f;--warn:#d97706;--bad:#dc2626;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}[hidden]{display:none!important}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1.25rem}
+.aura{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(600px 400px at var(--mx,70%) var(--my,10%),color-mix(in srgb,var(--a) 26%,transparent),transparent 70%),radial-gradient(700px 500px at 10% 90%,color-mix(in srgb,var(--c) 16%,transparent),transparent 70%)}
+.grid{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.3;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse at 50% 20%,#000 20%,transparent 70%)}
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 70%,transparent);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;gap:1.5rem;height:64px}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.2rem;letter-spacing:-.02em}
+.gem{width:22px;height:22px;background:conic-gradient(from 0deg,var(--a),var(--b),var(--c),var(--a));clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.links{display:flex;gap:1.4rem;margin-left:auto;align-items:center;color:var(--muted);font-weight:500}.links a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font:inherit;font-weight:600;padding:.7rem 1.2rem;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .15s,border-color .2s,box-shadow .2s}
+.btn:hover{border-color:var(--a)}.btn:active{transform:scale(.97)!important}
+.btn.glow{border:0;color:#fff;background:linear-gradient(120deg,var(--a),var(--c));box-shadow:0 8px 30px -8px color-mix(in srgb,var(--a) 70%,transparent)}
+.btn.sm{padding:.4rem .8rem;font-size:.9rem;border-radius:10px}.btn:disabled{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--b);outline-offset:3px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:center;padding:5rem 0 3rem}
+h1{font-size:clamp(2.4rem,6vw,4.4rem);line-height:1.04;letter-spacing:-.04em;margin:0}
+h2{font-size:clamp(1.6rem,3.5vw,2.3rem);letter-spacing:-.03em;margin:0 0 .6rem;line-height:1.1}h3{margin:0}
+.grad{background:linear-gradient(110deg,var(--b),var(--a) 45%,var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:flow 6s ease-in-out infinite alternate}
+@keyframes flow{to{background-position:100% 0}}
+.lead{color:var(--muted);font-size:1.15rem;max-width:46ch;margin:1.2rem 0 2rem}
+.cta{display:flex;gap:.8rem;flex-wrap:wrap}
+.orbwrap{display:grid;place-items:center;aspect-ratio:1;max-width:420px;margin:0 auto;width:100%;perspective:800px}
+.orb{position:relative;width:72%;aspect-ratio:1;border-radius:50%;background:conic-gradient(from 0deg,var(--a),var(--b),var(--c),var(--a));animation:spin 14s linear infinite;box-shadow:0 0 80px color-mix(in srgb,var(--a) 55%,transparent);transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .2s}
+.orb::after{content:"";position:absolute;inset:7%;border-radius:50%;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--surface) 60%,transparent),var(--bg) 75%)}
+.ring{position:absolute;inset:-9%;border-radius:50%;border:1px solid color-mix(in srgb,var(--b) 50%,transparent);animation:pulse 3.4s ease-out infinite}.ring:nth-child(2){animation-delay:1.7s}
+@keyframes pulse{from{transform:scale(.85);opacity:.9}to{transform:scale(1.3);opacity:0}}
+.live{border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 80%,transparent);border-radius:16px;padding:1.2rem 1.4rem;display:grid;grid-template-columns:auto 1fr;gap:1rem 2rem;align-items:center;backdrop-filter:blur(8px)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--muted);margin-right:.5rem}
+.dot.on{background:var(--ok);animation:beat 1.6s infinite}@keyframes beat{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent)}70%,100%{box-shadow:0 0 0 10px transparent}}
+.nums{display:flex;gap:2.2rem;flex-wrap:wrap}.nums b{display:block;font-size:1.5rem;letter-spacing:-.02em}.nums span,.small,.muted{color:var(--muted);font-size:.85rem}
+section.s{padding:4.5rem 0 0}.sub{color:var(--muted);max-width:56ch;margin:0 0 2rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.4rem;transition:transform .25s,border-color .25s;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(240px circle at var(--x,50%) var(--y,0%),color-mix(in srgb,var(--a) 20%,transparent),transparent 60%);opacity:0;transition:opacity .25s;pointer-events:none}
+.card:hover{border-color:color-mix(in srgb,var(--a) 60%,var(--line))}.card:hover::before{opacity:1}.card>*{position:relative}
+a.card:hover{transform:translateY(-4px)}
+.num{font:600 .85rem ui-monospace,Menlo,monospace;color:var(--b)}.card h3{margin:.5rem 0 .4rem;font-size:1.15rem}.card p{margin:0;color:var(--muted)}
+.honest{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}.stack{display:grid;gap:.7rem}
+.row{display:flex;justify-content:space-between;gap:1rem;padding:.9rem 1.1rem;border:1px solid var(--line);border-radius:12px;background:var(--surface)}.row b{color:var(--b);font-weight:600}
+.docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+footer.f{margin-top:5rem;border-top:1px solid var(--line);padding:2rem 0 2.5rem;color:var(--muted);font-size:.85rem}footer.f .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}.reveal.in{opacity:1;transform:none}
+/* scroll storytelling */
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;transform-origin:0 50%;transform:scaleX(var(--p,0));background:linear-gradient(90deg,var(--a),var(--b),var(--c));z-index:60;pointer-events:none}
+.strata{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.strata i{position:absolute;left:-10%;right:-10%;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--a) 45%,transparent),transparent);transform:translateY(calc(var(--sy,0)*var(--k)*-1px))}
+.hero>div:first-child{transform:translateY(calc(var(--sy,0)*.12px));opacity:calc(1 - var(--sy,0)/650)}
+.rule{height:1px;margin-top:4.5rem;background:linear-gradient(90deg,transparent,var(--a),var(--b),transparent);transform:scaleX(0);transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}.rule.in{transform:scaleX(1)}
+.rule+.s{padding-top:3rem}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.stage{position:sticky;top:96px;height:min(440px,70vh);display:grid;place-items:center;perspective:1100px}
+.stack{--dz:44px;position:relative;width:230px;height:230px;transform-style:preserve-3d;transform:rotateX(60deg) rotateZ(-40deg)}
+.layer{position:absolute;inset:0;border-radius:22px;border:1px solid color-mix(in srgb,var(--lc) 50%,var(--line));background:linear-gradient(135deg,color-mix(in srgb,var(--lc) 38%,var(--surface)),color-mix(in srgb,var(--lc) 10%,var(--surface)));box-shadow:0 24px 40px -24px color-mix(in srgb,var(--lc) 80%,transparent);opacity:0;transform:translateZ(calc(var(--i)*var(--dz) + 90px));transition:transform .8s cubic-bezier(.2,.8,.2,1),opacity .5s,border-color .3s,box-shadow .3s}
+.layer.on{opacity:1;transform:translateZ(calc(var(--i)*var(--dz)))}
+.layer.cur{border-color:var(--b);box-shadow:0 0 0 1px var(--b),0 30px 60px -18px color-mix(in srgb,var(--lc) 95%,transparent)}
+.legend{position:absolute;left:0;bottom:.5rem;list-style:none;margin:0;padding:0;display:grid;gap:.3rem;font:600 .8rem ui-monospace,Menlo,monospace;color:var(--muted)}
+.legend li{display:flex;align-items:center;gap:.5rem;opacity:.45;transition:opacity .3s,color .3s}.legend li::before{content:"";width:18px;height:2px;background:currentColor;transition:width .3s}
+.legend li.on{opacity:1;color:var(--ink)}.legend li.cur{color:var(--b)}.legend li.cur::before{width:34px}
+.step{min-height:62vh;display:flex;flex-direction:column;justify-content:center;opacity:.3;transform:translateX(14px);transition:opacity .5s,transform .5s}
+.step.on{opacity:1;transform:none}
+.step h3{font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:-.03em;margin:.4rem 0}.step p{color:var(--muted);max-width:42ch;font-size:1.05rem;margin:0}
+.final{text-align:center;padding:5rem 0 1rem}.final h2{font-size:clamp(2rem,5vw,3.2rem)}
+.docs .reveal:nth-child(2){transition-delay:.1s}.docs .reveal:nth-child(3){transition-delay:.2s}
+/* app */
+.shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.side{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:.25rem;padding:1.25rem .9rem;padding-top:calc(1.25rem + env(safe-area-inset-top,0px));background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(12px);border-right:1px solid var(--line)}
+.side .brand{padding:0 .6rem 1.1rem}
+.nav{display:flex;flex-direction:column;gap:.15rem}
+.nav a{display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;border-radius:10px;color:var(--muted);font-weight:500}
+.nav a svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav a:hover{background:color-mix(in srgb,var(--a) 12%,transparent);color:var(--ink)}
+.nav a.on{background:color-mix(in srgb,var(--a) 18%,transparent);color:var(--b);font-weight:600}
+.sidefoot{margin-top:auto;display:grid;gap:.6rem}
+.chip{font-size:.82rem;color:var(--muted);padding:.2rem .4rem;display:flex;align-items:center;gap:.5rem}
+.main{padding:2rem clamp(1rem,3vw,2.5rem) 3rem;padding-top:calc(2rem + env(safe-area-inset-top,0px));max-width:1100px;width:100%}
+.page{display:grid;gap:1.25rem}.page h1{font-size:clamp(1.7rem,3.5vw,2.4rem);letter-spacing:-.03em}
+.banner{font-size:.85rem;padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;color:var(--muted);background:var(--surface)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem}.stat b{display:block;font-size:1.4rem;letter-spacing:-.02em}.stat span{color:var(--muted);font-size:.85rem}
+.pnl{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.4rem}
+.two{display:grid;grid-template-columns:1fr 270px;gap:2rem;align-items:center}
+dl{display:grid;grid-template-columns:1fr 1fr;gap:1rem 2rem;margin:1rem 0 0}dt{color:var(--muted);font-size:.85rem}dd{margin:0;font-size:1.2rem;font-weight:600}
+.gauge{position:relative;text-align:center}.gauge svg{width:100%;display:block}.gauge path{fill:none;stroke-width:14;stroke-linecap:round}
+.track{stroke:var(--line)}.fill{transition:stroke-dashoffset .35s,stroke .35s;stroke:var(--a)}.warn .fill{stroke:var(--warn)}.bad .fill{stroke:var(--bad)}
+.gread{position:absolute;inset:auto 0 4px 0;display:flex;flex-direction:column}.gnum{font-size:2.3rem;font-weight:700;letter-spacing:-.03em;line-height:1}.glab{font-size:.85rem;color:var(--muted)}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:680px}
+th{font-weight:500;color:var(--muted);font-size:.85rem;text-align:left;padding:.5rem .75rem;border-bottom:1px solid var(--line)}td{padding:.9rem .75rem;border-bottom:1px solid var(--line)}tr:last-child td{border:0}
+.pos{color:var(--ok);font-weight:600}.bar{height:6px;background:var(--line);border-radius:3px;min-width:80px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--b));border-radius:3px}
+.acts{display:flex;gap:.5rem;justify-content:flex-end}.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
+.asset .big{font-size:1.5rem;font-weight:700;margin:.5rem 0 .1rem}.asset h3{display:flex;justify-content:space-between;align-items:baseline}
+.rowf{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-top:1rem}.end{justify-content:flex-end}
+.slider{display:block;margin:1.2rem 0}.slider span{display:flex;justify-content:space-between;font-weight:500;margin-bottom:.4rem}input[type=range]{width:100%;accent-color:var(--a)}
+.list{display:grid}.item{display:flex;justify-content:space-between;gap:1rem;padding:.8rem 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}
+.tip{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid color-mix(in srgb,var(--a) 50%,var(--line));background:color-mix(in srgb,var(--a) 10%,var(--surface));border-radius:14px;padding:1rem 1.2rem}
+details{border-bottom:1px solid var(--line);padding:.9rem 0}details:last-child{border:0}summary{cursor:pointer;font-weight:600}details p{margin:.6rem 0 0;color:var(--muted);max-width:62ch}
+.scrim{position:fixed;inset:0;background:rgba(2,5,15,.6);display:grid;place-items:center;padding:1rem;z-index:30}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.5rem;width:min(430px,100%);animation:rise .18s ease}@keyframes rise{from{transform:translateY(8px);opacity:0}}
+.field{display:flex;gap:.5rem;margin-top:1rem}.field input{flex:1;min-width:0;font:inherit;font-size:1.25rem;padding:.7rem .9rem;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.err{color:var(--bad);font-size:.9rem;margin:.6rem 0 0;min-height:1.3em}
+.toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--surface);border:1px solid var(--a);padding:.7rem 1.1rem;border-radius:12px;z-index:40;max-width:90vw}
+@media(max-width:860px){.story-grid{grid-template-columns:1fr;gap:0}.stage{top:64px;height:250px;z-index:2;background:linear-gradient(var(--bg) 72%,transparent)}.stack{--dz:28px;width:150px;height:150px}.legend{display:none}.step{min-height:50vh}.rule{margin-top:3rem}}
+@media(max-width:860px){.hero{grid-template-columns:1fr;padding-top:3rem}.orbwrap{max-width:280px;order:-1}.honest{grid-template-columns:1fr}.links a:not(.btn){display:none}.live{grid-template-columns:1fr}
+ .shell{grid-template-columns:1fr}.side{position:sticky;top:0;height:auto;flex-direction:row;align-items:center;gap:.5rem;padding:.6rem .8rem;padding-top:calc(.6rem + env(safe-area-inset-top,0px));overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);z-index:5}
+ .side .brand{padding:0 .5rem 0 0}.nav{flex-direction:row}.nav a{white-space:nowrap;padding:.5rem .65rem}.sidefoot{margin:0 0 0 auto;display:flex}.chip{display:none}.two{grid-template-columns:1fr}.gauge{max-width:270px;margin:0 auto}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.rule{transform:none}.layer{opacity:1;transform:translateZ(calc(var(--i)*var(--dz)))}.step{opacity:1;transform:none}.hero>div:first-child{transform:none;opacity:1}.strata i{transform:none}}
+.tabs,.mcards{display:none}
+.wlist{display:grid;gap:.6rem;margin-top:1rem}.wopt{justify-content:flex-start;gap:.8rem;min-height:48px}.wopt img{border-radius:6px}.wdot{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--c))}
+.wtips{margin:.8rem 0 0;padding-left:1.1rem;color:var(--muted);font-size:.92rem;display:grid;gap:.4rem}
+.mlinks{display:grid;gap:.3rem;margin-top:.8rem}.mlinks a,.mlinks button{display:flex;align-items:center;min-height:48px;padding:0 .8rem;border-radius:12px;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:600;text-align:left;cursor:pointer}.mlinks a:hover,.mlinks button:hover{background:color-mix(in srgb,var(--a) 14%,transparent)}
+.mc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;display:grid;gap:.7rem}.mc .top2{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem}.mc dl{margin:0;gap:.6rem 1rem}.mc dd{font-size:1rem}
+@media(max-width:860px){
+ .side{justify-content:space-between;padding:.6rem 1rem;padding-top:calc(.6rem + env(safe-area-inset-top,0px));overflow:visible}.side .brand{padding:0}.side .nav,.chip,#faucet{display:none}.sidefoot{margin:0;display:flex}
+ .main{padding:1.25rem 1rem calc(6rem + env(safe-area-inset-bottom,0px))}
+ .tabs{display:grid;grid-template-columns:repeat(6,1fr);position:fixed;left:0;right:0;bottom:0;z-index:25;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:.3rem .2rem calc(.3rem + env(safe-area-inset-bottom,0px))}
+ .tabs a,.tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;min-height:52px;border:0;background:none;color:var(--muted);font:600 .68rem Inter,system-ui,sans-serif;cursor:pointer}
+ .tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.tabs .on{color:var(--b)}
+ .btn{min-height:44px}.btn.sm{min-height:40px}
+ .dtable{display:none}.mcards{display:grid;gap:.8rem}
+ .scrim{align-items:end;padding:0}.panel{width:100%;border-radius:20px 20px 0 0;padding-bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));animation:sheet .22s ease}
+ @keyframes sheet{from{transform:translateY(100%)}}
+ .toast{bottom:calc(4.8rem + env(safe-area-inset-bottom,0px))}
+ .page h1{font-size:1.7rem}.stats{grid-template-columns:1fr 1fr}.stat b{font-size:1.15rem}.grid3{grid-template-columns:1fr}
+ .tip{flex-direction:column;align-items:stretch}.tip .btn{width:100%}
+ .hero{padding:2rem 0 1.5rem;gap:1rem}.orbwrap{order:2;max-width:190px}.cta .btn{flex:1 1 100%}h1{font-size:clamp(2.2rem,11vw,3rem)}
+ .nav a{padding:.5rem .65rem}}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<div class="aura"></div><div class="grid"></div>
+<div class="strata" aria-hidden="true"><i style="top:16%;--k:.05"></i><i style="top:34%;--k:.09"></i><i style="top:52%;--k:.03"></i><i style="top:70%;--k:.12"></i><i style="top:88%;--k:.07"></i></div>
+
+<div id="home">
+<nav class="top"><div class="wrap">
+  <a class="brand" href="#top"><span class="gem"></span>Kaelume</a>
+  <div class="links"><a href="#how">How it works</a><a href="#docs">Docs</a><a class="btn glow sm" href="#overview">Launch app</a></div>
+</div></nav>
+<main id="top"><div class="wrap">
+  <header class="hero">
+    <div>
+      <p class="small" style="margin:0 0 1rem"><span class="dot on"></span>Interactive preview · Elysium launch follows an independent audit</p>
+      <h1>Liquidity, <span class="grad">unlocked.</span></h1>
+      <p class="lead">One shared pool. Supply HYPE, kHYPE, or USDC, borrow against it without selling, and see your risk before it matters.</p>
+      <div class="cta"><a class="btn glow" href="#overview">Launch app</a><a class="btn" href="#how">See how it works</a></div>
+      <p class="small" style="margin:1rem 0 0">No wallet needed to try the demo.</p>
+    </div>
+    <div class="orbwrap" aria-hidden="true"><div class="orb" id="orb"><span class="ring"></span><span class="ring"></span></div></div>
+  </header>
+  <div class="live" role="status" aria-live="polite">
+    <div><span class="dot" id="dot"></span><strong>Live from the Kaelume ledger</strong><div class="small" id="src">Connecting…</div></div>
+    <div class="nums" id="nums"></div>
+  </div>
+  <div class="rule"></div>
+  <section class="s story" id="how">
+    <div class="reveal"><h2>Built in layers.</h2><p class="sub">Each layer does one job. Scroll to stack them.</p></div>
+    <div class="story-grid">
+      <div class="stage" aria-hidden="true">
+        <div class="stack">
+          <div class="layer" data-l="1" style="--i:0;--lc:var(--a)"></div>
+          <div class="layer" data-l="2" style="--i:1;--lc:var(--c)"></div>
+          <div class="layer" data-l="3" style="--i:2;--lc:var(--b)"></div>
+          <div class="layer" data-l="4" style="--i:3;--lc:var(--ok)"></div>
+        </div>
+        <ol class="legend" id="legend"><li data-l="4">Safety</li><li data-l="3">Borrow</li><li data-l="2">Collateral</li><li data-l="1">Supply</li></ol>
+      </div>
+      <div class="steps">
+        <article class="step" data-s="1"><span class="num">LAYER 01</span><h3>Supply</h3><p>Deposit HYPE, kHYPE, or USDC into one shared pool. This is the base layer, and it earns when others borrow.</p></article>
+        <article class="step" data-s="2"><span class="num">LAYER 02</span><h3>Collateral</h3><p>Your supplied assets count as collateral. Each asset has its own limit, and kHYPE is treated more cautiously.</p></article>
+        <article class="step" data-s="3"><span class="num">LAYER 03</span><h3>Borrow</h3><p>Borrow against that collateral without selling it. You can only borrow what the pool actually holds.</p></article>
+        <article class="step" data-s="4"><span class="num">LAYER 04</span><h3>Safety</h3><p>A live health gauge and a risk lab show what a price drop would do before it happens. Repay to safety in one tap.</p></article>
+      </div>
+    </div>
+  </section>
+  <div class="rule"></div>
+  <section class="s" id="docs">
+    <div class="reveal"><h2>Documentation</h2><p class="sub">The concept, requirements, and architecture are written down and open to read.</p></div>
+    <div class="docs">
+      <a class="card reveal" href="https://claude.ai/artifact/WwiRWNJ4PX2236cgQRs5BK" target="_blank" rel="noopener"><span class="num">VRD</span><h3>Vision &amp; Requirements</h3><p>Concept, scope, every button’s behaviour, data policy, and roadmap.</p></a>
+      <div class="card reveal"><span class="num">API</span><h3>Backend reference</h3><p>Stats, markets, positions, transaction preparation, risk simulation, and live stream.</p></div>
+      <div class="card reveal"><span class="num">SEC</span><h3>Security and risk</h3><p>Audit before funds, simulation before every transaction, and clear liquidation disclosure.</p></div>
+    </div>
+  </section>
+  <div class="rule"></div>
+  <section class="s final reveal"><h2>Start at the bottom layer.</h2><p class="sub" style="margin-inline:auto">Open the preview and stack your first position with demo tokens.</p><a class="btn glow" href="#overview">Launch app</a></section>
+</div></main>
+<footer class="f"><div class="wrap"><span>© Kaelume. Non-custodial interface.</span><span>Demo tokens only in this version. Borrowing carries liquidation risk. Not financial advice.</span></div></footer>
+</div>
+
+<div id="app" hidden><div class="shell">
+  <aside class="side">
+    <a class="brand" href="#top"><span class="gem"></span>Kaelume</a>
+    <nav class="nav" id="nav" aria-label="Primary"></nav>
+    <div class="sidefoot">
+      <div class="chip" id="net"></div>
+      <button class="btn sm" id="faucet">Get demo tokens</button>
+      <button class="btn glow sm" id="wallet">Connect wallet</button>
+    </div>
+  </aside>
+  <main class="main" id="view"></main>
+</div>
+<nav class="tabs" id="tabs" aria-label="Primary"></nav></div>
+
+<div class="scrim" id="scrim" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="pt">
+  <h3 id="pt"></h3><p class="muted" id="ps"></p>
+  <div class="field"><input id="amt" inputmode="decimal" placeholder="0.00" aria-label="Amount"><button class="btn sm" id="max" type="button">Max</button></div>
+  <p class="muted" id="pv" style="margin:.6rem 0 0"></p><p class="err" id="perr" role="alert"></p>
+  <div class="rowf end"><button class="btn" id="cancel">Cancel</button><button class="btn glow" id="ok"></button></div>
+</div></div>
+<div class="scrim" id="more" hidden><div class="panel"><h3>More</h3><div class="mlinks"><a href="#activity">Activity</a><a href="#status">Launch status</a><a href="#learn">Learn</a><button data-a="faucet">Get demo tokens</button><a href="#top">Back to home</a></div></div></div>
+<div class="scrim" id="wsheet" hidden><div class="panel" id="wbody"></div></div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var A={HYPE:{p:38,lt:.70,v:1,n:'Hyperliquid'},kHYPE:{p:40,lt:.65,v:1,n:'Staked HYPE'},USDC:{p:1,lt:.80,v:0,n:'USD Coin'}},K=Object.keys(A);
+var FAUCET={HYPE:100,kHYPE:50,USDC:1000};
+var S={db:null,uid:null,live:false,acct:blank(),ev:[],addr:null,mine:false,sd:0,sx:0,page:null};
+function blank(){var o={w:{},s:{},b:{},faucetAt:0};K.forEach(function(k){o.w[k]=0;o.s[k]=0;o.b[k]=0});return o}
+var usd=function(n){return n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0})};
+var num=function(n){return (+n).toLocaleString('en-US',{maximumFractionDigits:4})};
+var r6=function(n){return +(+n).toFixed(6)};
+
+/* ledger maths: everything derives from recorded actions */
+function pool(){var t={},u={};K.forEach(function(k){t[k]={s:0,b:0}});
+ S.ev.forEach(function(e){var x=t[e.asset];if(!x)return;u[e.user]=1;var n=+e.amount;
+  if(e.kind==='supply')x.s+=n;else if(e.kind==='withdraw')x.s-=n;else if(e.kind==='borrow')x.b+=n;else if(e.kind==='repay')x.b-=n});
+ return{t:t,users:Object.keys(u).length,n:S.ev.length}}
+function rates(x){var u=x.s>0?Math.max(0,x.b)/x.s:0,ba=2+12*u;return{u:u,ba:ba,sa:ba*u*.9}}
+function risk(a,d,x){d=d||0;x=x||0;var vw=0,sw=0,c=0,debt=x,bv=0;
+ K.forEach(function(k){var m=A[k],px=m.v?m.p*(1-d/100):m.p,v=a.s[k]*px;c+=v;if(m.v){vw+=v*m.lt;bv+=a.s[k]*m.p*m.lt}else sw+=v*m.lt;debt+=a.b[k]*px});
+ var w=vw+sw;return{hf:debt>0?w/debt:Infinity,c:c,debt:debt,w:w,cap:Math.max(0,w-debt),liq:debt>0&&bv>0?Math.max(0,(1-(debt-sw)/bv)*100):null}}
+function gauge(hf){var L=Math.PI*90,v=hf===Infinity?3:Math.min(hf,3),t=hf<1.1?'bad':hf<1.5?'warn':'',lab=hf===Infinity?'No debt':hf<1?'Liquidatable':hf<1.1?'Critical':hf<1.5?'Caution':'Healthy';
+ return'<div class="gauge '+t+'"><svg viewBox="0 0 200 115" role="img" aria-label="Health factor"><path class="track" d="M10 105 A90 90 0 0 1 190 105"/><path class="fill" d="M10 105 A90 90 0 0 1 190 105" style="stroke-dasharray:'+L+';stroke-dashoffset:'+L*(1-v/3)+'"/></svg><div class="gread"><span class="gnum">'+(hf===Infinity?'∞':hf.toFixed(2))+'</span><span class="glab">'+lab+'</span></div></div>'}
+function toast(m){var t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(function(){t.hidden=true},3200)}
+
+/* actions: validate, then record. Shared ledger when available, local session otherwise */
+function apply(kind,k,n){var a=JSON.parse(JSON.stringify(S.acct)),P=pool().t[k],free=P.s-P.b;n=r6(n);
+ if(!(n>0))return{err:'Enter an amount greater than zero.'};
+ if(kind==='supply'){if(n>a.w[k]+1e-9)return{err:'Not enough '+k+' in your wallet. Use “Get demo tokens”.'};a.w[k]=r6(a.w[k]-n);a.s[k]=r6(a.s[k]+n)}
+ else if(kind==='withdraw'){if(n>a.s[k]+1e-9)return{err:'That is more than you have supplied.'};if(n>free+1e-9)return{err:'The pool does not have that much free liquidity.'};a.s[k]=r6(a.s[k]-n);a.w[k]=r6(a.w[k]+n)}
+ else if(kind==='borrow'){if(n>free+1e-9)return{err:'The pool only has '+num(Math.max(0,free))+' '+k+' available to borrow.'};a.b[k]=r6(a.b[k]+n);a.w[k]=r6(a.w[k]+n)}
+ else{if(n>a.b[k]+1e-9)return{err:'That is more than you owe.'};if(n>a.w[k]+1e-9)return{err:'Not enough '+k+' in your wallet.'};a.b[k]=r6(a.b[k]-n);a.w[k]=r6(a.w[k]-n)}
+ var r=risk(a);if((kind==='withdraw'||kind==='borrow')&&r.debt>0&&r.hf<1.02)return{err:'This would drop your health factor to '+r.hf.toFixed(2)+', too close to liquidation.'};
+ return{a:a,hf:r.hf}}
+async function commit(kind,k,n,a){var ev={kind:kind,asset:k,amount:r6(n),user:S.uid||'local',ts:Date.now()};
+ if(S.live){try{await S.db.collection('data/users/'+S.uid).doc('account').set(a);await S.db.collection('events').doc(ev.ts+'-'+Math.random().toString(36).slice(2,7)).set(ev);return true}
+  catch(e){toast('Could not save. Your access may be read-only.');return false}}
+ S.acct=a;S.ev.unshift(ev);return true}
+
+/* pages */
+var PAGES={overview:'Overview',markets:'Markets',supply:'Supply',borrow:'Borrow',risk:'Risk lab',activity:'Activity',status:'Launch status',learn:'Learn'};
+var IC={overview:'<path d="M3 11l9-8 9 8M5 10v10h14V10"/>',markets:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',supply:'<path d="M12 19V5M5 12l7-7 7 7"/>',borrow:'<path d="M12 5v14M5 12l7 7 7-7"/>',risk:'<path d="M12 3l9 16H3zM12 10v4M12 17h.01"/>',activity:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',status:'<path d="M9 12l2 2 4-4M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',learn:'<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 19a2 2 0 012-2h13"/>'};
+var head=function(t,s){return'<div><h1>'+t+'</h1><p class="sub" style="margin:.4rem 0 0">'+s+'</p></div>'};
+var banner=function(){return'<div class="banner">'+(S.live?'Shared ledger: actions are saved and counted for everyone. Demo tokens are free and need no wallet.':'Local session: actions work here but are not saved or shared. Open the app signed in to claude.ai for the shared ledger. Demo tokens need no wallet.')+'</div>'};
+var btn=function(a,k,c,l){return'<button class="btn '+c+' sm" data-a="'+a+'" data-k="'+k+'">'+l+'</button>'};
+function mcard(k,p){var x=p.t[k],r=rates(x);return'<div class="mc"><div class="top2"><span><b>'+k+'</b> <span class="muted">'+A[k].n+'</span></span><span class="muted">'+usd(A[k].p)+' demo price</span></div><dl><div><dt>Supplied</dt><dd>'+num(x.s)+'</dd></div><div><dt>Borrowed</dt><dd>'+num(x.b)+'</dd></div><div><dt>Supply APY</dt><dd class="pos">'+(x.s>0?r.sa.toFixed(2)+'%':'n/a')+'</dd></div><div><dt>Borrow APY</dt><dd>'+r.ba.toFixed(2)+'%</dd></div></dl><div class="bar"><i style="width:'+Math.min(100,r.u*100)+'%"></i></div><span class="muted">'+(x.s>0?(r.u*100).toFixed(0)+'% utilization · ':'No supply yet · ')+'Max LTV '+A[k].lt*100+'%</span><div class="rowf" style="margin:0">'+btn('supply',k,'glow','Supply')+btn('borrow',k,'','Borrow')+'</div></div>'}
+var P={
+overview:function(){var p=pool(),r=risk(S.acct),tS=0,tB=0;K.forEach(function(k){tS+=p.t[k].s*A[k].p;tB+=p.t[k].b*A[k].p});
+ var tip,has=K.some(function(k){return S.acct.w[k]>0||S.acct.s[k]>0});
+ if(!has)tip=['Start with free demo tokens to try every action.','faucet','Get demo tokens'];
+ else if(r.c===0)tip=['Supply an asset to start earning and unlock borrowing.','go-supply','Supply'];
+ else if(r.debt>0&&r.hf<1.5)tip=['Your health factor is low. Repay about '+usd(Math.max(0,r.debt-r.w/1.5))+' to reach 1.5.','repay-safe','Repay to safety'];
+ else tip=['You can borrow about '+usd(Math.max(0,r.w/1.5-r.debt))+' more and still stay above a 1.5 health factor.','go-borrow','Borrow'];
+ var rec=S.ev.slice(0,5);
+ return head('Overview','Your position and the platform at a glance.')+banner()+
+ '<div class="stats"><div class="stat"><b>'+p.n.toLocaleString()+'</b><span>Recorded actions</span></div><div class="stat"><b>'+p.users+'</b><span>Active wallets</span></div><div class="stat"><b>'+(p.n?usd(tS):'No data yet')+'</b><span>Total supplied (demo prices)</span></div><div class="stat"><b>'+(p.n?usd(tB):'No data yet')+'</b><span>Total borrowed (demo prices)</span></div></div>'+
+ '<div class="tip"><span>'+tip[0]+'</span><button class="btn glow sm" data-a="'+tip[1]+'">'+tip[2]+'</button></div>'+
+ '<section class="pnl two"><div><h2>Your position</h2><dl><div><dt>Collateral</dt><dd>'+usd(r.c)+'</dd></div><div><dt>Debt</dt><dd>'+usd(r.debt)+'</dd></div><div><dt>Available to borrow</dt><dd>'+usd(r.cap)+'</dd></div><div><dt>Liquidation if collateral falls</dt><dd>'+(r.liq==null?'n/a':r.liq.toFixed(1)+'%')+'</dd></div></dl></div>'+gauge(r.hf)+'</section>'+
+ '<section class="pnl"><h2>Recent activity</h2>'+(rec.length?'<div class="list">'+rec.map(feed).join('')+'</div>':'<p class="muted">No activity yet. The first action will appear here.</p>')+'</section>'},
+markets:function(){var p=pool();return head('Markets','Rates move with utilization. They are computed from the pool, not typed in.')+banner()+
+ '<section class="pnl dtable"><div class="scroll"><table><thead><tr><th>Asset</th><th>Supplied</th><th>Borrowed</th><th>Utilization</th><th>Supply APY</th><th>Borrow APY</th><th>Max LTV</th><th></th></tr></thead><tbody>'+K.map(function(k){var x=p.t[k],r=rates(x);
+ return'<tr><td><b>'+k+'</b><div class="muted">'+A[k].n+' · demo price '+usd(A[k].p)+'</div></td><td>'+num(x.s)+'</td><td>'+num(x.b)+'</td><td><div class="bar"><i style="width:'+Math.min(100,r.u*100)+'%"></i></div><span class="muted">'+(x.s>0?(r.u*100).toFixed(0)+'%':'No supply yet')+'</span></td><td class="pos">'+(x.s>0?r.sa.toFixed(2)+'%':'n/a')+'</td><td>'+r.ba.toFixed(2)+'%</td><td>'+A[k].lt*100+'%</td><td class="acts">'+btn('supply',k,'glow','Supply')+btn('borrow',k,'','Borrow')+'</td></tr>'}).join('')+'</tbody></table></div></section><div class="mcards">'+K.map(function(k){return mcard(k,p)}).join('')+'</div>'},
+supply:function(){return head('Supply','Deposit assets to earn yield and use them as collateral.')+banner()+'<div class="grid3">'+K.map(function(k){return'<section class="card asset"><h3>'+k+'<span class="muted">Wallet '+num(S.acct.w[k])+'</span></h3><div class="big">'+num(S.acct.s[k])+'</div><span class="muted">'+usd(S.acct.s[k]*A[k].p)+' supplied</span><div class="rowf">'+btn('supply',k,'glow','Supply')+btn('withdraw',k,'','Withdraw')+'</div></section>'}).join('')+'</div>'},
+borrow:function(){var r=risk(S.acct);return head('Borrow','Borrow against your collateral without selling it.')+banner()+'<div class="stats"><div class="stat"><b>'+usd(r.debt)+'</b><span>Current debt</span></div><div class="stat"><b>'+usd(r.cap)+'</b><span>Borrow capacity</span></div><div class="stat"><b>'+(r.hf===Infinity?'∞':r.hf.toFixed(2))+'</b><span>Health factor</span></div></div><div class="grid3">'+K.map(function(k){return'<section class="card asset"><h3>'+k+'<span class="muted">Wallet '+num(S.acct.w[k])+'</span></h3><div class="big">'+num(S.acct.b[k])+'</div><span class="muted">'+usd(S.acct.b[k]*A[k].p)+' borrowed</span><div class="rowf">'+btn('borrow',k,'glow','Borrow')+btn('repay',k,'','Repay')+'</div></section>'}).join('')+'</div>'},
+risk:function(){return head('Risk lab','Stress-test your position. Nothing here changes your real balances.')+banner()+
+ '<section class="pnl two"><div><div class="rowf" style="margin:0"><button class="btn sm" data-p="0">Calm</button><button class="btn sm" data-p="20">Dip −20%</button><button class="btn sm" data-p="40">Crash −40%</button><button class="btn sm" data-p="60">Severe −60%</button></div>'+
+ '<label class="slider"><span>HYPE and kHYPE price drop <b id="dv"></b></span><input type="range" id="drop" min="0" max="80" value="'+S.sd+'"></label><label class="slider"><span>Additional borrow (USD) <b id="ev"></b></span><input type="range" id="extra" min="0" max="30000" step="500" value="'+S.sx+'"></label><p class="muted" id="simsum"></p></div><div id="g2"></div></section>'+
+ '<section class="pnl"><h2>Liquidation levels</h2><div id="liqs"></div></section>'},
+activity:function(){var l=S.ev.filter(function(e){return!S.mine||e.user===(S.uid||'local')}).slice(0,60);return head('Activity','Every supply, borrow, and repayment recorded by the ledger.')+banner()+'<section class="pnl"><label class="muted"><input type="checkbox" id="mine" '+(S.mine?'checked':'')+'> Show only my activity</label>'+(l.length?'<div class="list">'+l.map(feed).join('')+'</div>':'<p class="muted" style="margin-top:1rem">No activity yet. Numbers and entries appear here only when someone acts.</p>')+'</section>'},
+status:function(){var rows=[['Interactive preview','Live','This app. Demo tokens, no real funds.'],['Smart contracts','Not started','Plan: fork an audited lending codebase rather than write one from scratch.'],['Elysium testnet (chain ID 99801)','Not started','First deployment target for every button flow.'],['Price oracle','Under evaluation','Elysium plans native HyperCore price reads about four weeks after its mainnet launch. kHYPE needs conservative limits.'],['Independent audit','Not started','Required before any mainnet transaction.'],['Elysium mainnet','Not scheduled','Guarded launch: deposit caps, per-wallet caps, pause switch. Exits are never blocked.']];
+ return head('Launch status','Where Kaelume really is. Updated by hand, never by a script.')+'<section class="pnl"><div class="list">'+rows.map(function(r){return'<div class="item"><span><b>'+r[0]+'</b><div class="muted">'+r[2]+'</div></span><span class="'+(r[1]==='Live'?'pos':'muted')+'">'+r[1]+'</span></div>'}).join('')+'</div></section><section class="pnl"><h2>Risk disclosure</h2><details open><summary>You can lose money</summary><p>Prices can fall quickly. If your health factor drops below 1.0, part of your collateral can be sold to repay debt.</p></details><details><summary>Smart contract and chain risk</summary><p>Contracts can have bugs even after an audit. Elysium launched on November 9, 2026 with a single sequencer and a single data-availability server at launch, and withdrawals to HyperEVM take about 5.5 days.</p></details><details><summary>Not advice</summary><p>Nothing here is financial or legal advice. Rules for lending protocols differ by country, so check your local rules.</p></details></section>'},
+learn:function(){return head('Learn','The basics, in plain language.')+'<section class="pnl"><details open><summary>What is a health factor?</summary><p>It compares the risk-adjusted value of your collateral to your debt. Above 1.5 is comfortable. Below 1.0 your position can be liquidated.</p></details><details><summary>Where do rates come from?</summary><p>From pool utilization. When more of the pool is borrowed, borrowers pay more and suppliers earn more.</p></details><details><summary>Are these real funds?</summary><p>No. This version uses demo tokens and fixed demo prices. Real on-chain execution needs audited contracts and the Kaelume backend.</p></details><details><summary>Why can I not borrow more?</summary><p>You can only borrow what the pool actually holds and what your collateral allows while keeping a safe health factor.</p></details></section>'}};
+function ago(ts){var s=Math.max(0,(Date.now()-ts)/1000);return s<60?'just now':s<3600?Math.floor(s/60)+' min ago':s<86400?Math.floor(s/3600)+' h ago':Math.floor(s/86400)+' d ago'}
+var VB={supply:'Supplied',withdraw:'Withdrew',borrow:'Borrowed',repay:'Repaid'};
+function feed(e){return'<div class="item"><span><b>'+(VB[e.kind]||esc(e.kind))+'</b> '+num(e.amount)+' '+esc(e.asset)+' <span class="muted">by '+(e.user===(S.uid||'local')?'you':esc(String(e.user).slice(0,6)))+'</span></span><span class="muted">'+ago(e.ts)+'</span></div>'}
+function simUpdate(){var r=risk(S.acct,S.sd,S.sx);$('dv').textContent=S.sd+'%';$('ev').textContent=usd(S.sx);$('simsum').textContent='Collateral '+usd(r.c)+' · Debt '+usd(r.debt);$('g2').innerHTML=gauge(r.hf);
+ var b=risk(S.acct),rows=K.filter(function(k){return A[k].v&&S.acct.s[k]>0});
+ $('liqs').innerHTML=b.debt>0&&b.liq!=null?'<div class="list">'+rows.map(function(k){return'<div class="item"><span>'+k+' if it falls with the others</span><b>'+usd(A[k].p*(1-b.liq/100))+' ('+b.liq.toFixed(1)+'% drop)</b></div>'}).join('')+'<div class="item"><span>To reach a 1.5 health factor</span><b>Repay about '+usd(Math.max(0,b.debt-b.w/1.5))+'</b></div></div>':'<p class="muted">No debt, so no liquidation level. Borrow something to see where the line is.</p>'}
+
+/* shell and routing */
+var MAIN={overview:'Home',markets:'Markets',supply:'Supply',borrow:'Borrow',risk:'Risk'};
+function renderTabs(page){$('tabs').innerHTML=Object.keys(MAIN).map(function(id){return'<a href="#'+id+'" class="'+(id===page?'on':'')+'"><svg viewBox="0 0 24 24">'+IC[id]+'</svg>'+MAIN[id]+'</a>'}).join('')+'<button data-more class="'+(MAIN[page]?'':'on')+'" aria-label="More pages"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>More</button>'}
+function renderApp(page){S.page=page;renderTabs(page);
+ $('nav').innerHTML=Object.keys(PAGES).map(function(id){return'<a href="#'+id+'" class="'+(id===page?'on':'')+'" '+(id===page?'aria-current="page"':'')+'><svg viewBox="0 0 24 24">'+IC[id]+'</svg>'+PAGES[id]+'</a>'}).join('');
+ $('net').innerHTML='<i class="dot on" style="margin:0"></i>'+(S.live?'Shared ledger':'Local session')+' · Preview';
+ $('view').innerHTML='<div class="page">'+P[page]()+'</div>';
+ if(page==='risk'){$('drop').oninput=function(e){S.sd=+e.target.value;simUpdate()};$('extra').oninput=function(e){S.sx=+e.target.value;simUpdate()};simUpdate()}
+ if(page==='activity')$('mine').onchange=function(e){S.mine=e.target.checked;renderApp('activity')}}
+function route(){$('more').hidden=true;$('wsheet').hidden=true;var h=location.hash.slice(1),app=Object.prototype.hasOwnProperty.call(PAGES,h);$('home').hidden=app;$('app').hidden=!app;
+ if(app){renderApp(h);scrollTo(0,0)}else if(h&&$(h))$(h).scrollIntoView();else scrollTo(0,0);paintLive()}
+addEventListener('hashchange',route);
+
+/* landing live strip: honest states only */
+function paintLive(){var dot=$('dot'),src=$('src'),nums=$('nums'),p=pool();
+ dot.className='dot on';
+ if(!S.live){src.textContent='Local session. Sign in to claude.ai to read the shared ledger.';nums.innerHTML=p.n?'':'<span class="small">No figures are shown outside the shared ledger.</span>';return}
+ src.textContent='Source: shared action ledger · demo tokens, no real funds';
+ nums.innerHTML=p.n?'<div><b>'+p.n.toLocaleString()+'</b><span>Recorded actions</span></div><div><b>'+p.users+'</b><span>Active wallets</span></div><div><b>'+ago(S.ev[0].ts)+'</b><span>Last activity</span></div>':'<span class="small">No activity yet. Numbers will appear here the moment the first action is recorded.</span>'}
+function paint(){paintLive();if(!$('app').hidden&&S.page&&S.page!=='risk'&&$('scrim').hidden)renderApp(S.page)}
+
+/* dialog */
+var D=null;
+var VERB={supply:['Supply','Earn from pool utilization'],withdraw:['Withdraw','Take your collateral back'],borrow:['Borrow','Pay a variable rate'],repay:['Repay','Reduce your debt']};
+function maxOf(kind,k){var a=S.acct,P0=pool().t[k],free=Math.max(0,P0.s-P0.b),m;
+ if(kind==='supply')m=a.w[k];else if(kind==='withdraw')m=Math.min(a.s[k],free);else if(kind==='repay')m=Math.min(a.b[k],a.w[k]);
+ else{var r=risk(a);m=Math.min(Math.max(0,(r.w/1.05-r.debt)/A[k].p),free)}return Math.floor(m*1e4)/1e4}
+function preview(){var n=+$('amt').value,res=n>0?apply(D.kind,D.k,n):null;$('perr').textContent='';
+ $('pv').textContent=res&&res.a?'Health factor after: '+(res.hf===Infinity?'no debt':res.hf.toFixed(2)):'Wallet '+num(S.acct.w[D.k])+' '+D.k}
+function openAct(kind,k){D={kind:kind,k:k};var v=VERB[kind];$('pt').textContent=v[0]+' '+k;$('ps').textContent=v[1]+' · demo tokens, no real funds';$('ok').textContent=v[0]+' '+k;$('amt').value='';$('scrim').hidden=false;preview();$('amt').focus()}
+$('amt').oninput=preview;$('max').onclick=function(){$('amt').value=maxOf(D.kind,D.k)||'';preview()};
+$('cancel').onclick=function(){$('scrim').hidden=true};$('scrim').onclick=function(e){if(e.target===$('scrim'))$('scrim').hidden=true};
+addEventListener('keydown',function(e){if(e.key==='Escape')$('scrim').hidden=true});
+$('ok').onclick=async function(){var n=+$('amt').value,res=apply(D.kind,D.k,n);if(res.err)return $('perr').textContent=res.err;
+ $('ok').disabled=true;var ok=await commit(D.kind,D.k,n,res.a);$('ok').disabled=false;if(ok){$('scrim').hidden=true;toast(VB[D.kind]+' '+num(n)+' '+D.k);if(S.page)renderApp(S.page)}};
+
+function repaySafe(){var r=risk(S.acct),need=Math.max(0,r.debt-r.w/1.5),k=K.filter(function(x){return S.acct.b[x]>0}).sort(function(x,y){return S.acct.b[y]*A[y].p-S.acct.b[x]*A[x].p})[0];
+ if(!k)return toast('You have no debt to repay.');openAct('repay',k);$('amt').value=Math.min(Math.ceil(need/A[k].p*1e4)/1e4,maxOf('repay',k))||'';preview()}
+/* global click routing for data-a / data-p buttons */
+document.addEventListener('click',function(e){var b=e.target.closest('[data-a],[data-p]');if(!b)return;
+ if(b.dataset.p!==undefined){S.sd=+b.dataset.p;$('drop').value=S.sd;simUpdate();return}
+ var a=b.dataset.a;if(a==='faucet')return faucet();if(a==='repay-safe')return repaySafe();if(a==='go-supply'){location.hash='supply';return}if(a==='go-borrow'){location.hash='borrow';return}openAct(a,b.dataset.k)});
+async function faucet(){$('more').hidden=true;var a=JSON.parse(JSON.stringify(S.acct)),now=Date.now();
+ if(a.faucetAt&&now-a.faucetAt<864e5)return toast('Demo tokens are available once every 24 hours.');
+ K.forEach(function(k){a.w[k]=r6(a.w[k]+FAUCET[k])});a.faucetAt=now;
+ if(S.live){try{await S.db.collection('data/users/'+S.uid).doc('account').set(a)}catch(e){return toast('Could not save. Your access may be read-only.')}}else S.acct=a;
+ toast('Added 100 HYPE, 50 kHYPE and 1,000 USDC of demo tokens.');if(S.page)renderApp(S.page)}
+$('faucet').onclick=faucet;
+
+/* wallet: EIP-6963 discovery with a legacy fallback. Optional; the demo never needs it. */
+var W={list:[],shown:[]};
+addEventListener('eip6963:announceProvider',function(e){var d=e.detail;if(d&&d.info&&d.provider&&!W.list.some(function(x){return x.info.uuid===d.info.uuid}))W.list.push(d)});
+function discover(){try{dispatchEvent(new Event('eip6963:requestProvider'))}catch(e){}}
+function wallets(){var l=W.list.slice();if(!l.length&&window.ethereum){var ps=window.ethereum.providers&&window.ethereum.providers.length?window.ethereum.providers:[window.ethereum];ps.forEach(function(p,i){l.push({info:{uuid:'legacy'+i,name:p.isMetaMask?'MetaMask':p.isRabby?'Rabby':p.isCoinbaseWallet?'Coinbase Wallet':'Browser wallet',icon:''},provider:p})})}return l}
+var shortAddr=function(a){return a.slice(0,6)+'…'+a.slice(-4)};
+function paintWallet(){$('wallet').textContent=S.addr?shortAddr(S.addr):'Connect wallet';$('wallet').className='btn sm'+(S.addr?'':' glow')}
+function sheet(h){$('wbody').innerHTML=h;$('wsheet').hidden=false}
+async function connect(d){try{var ac=await d.provider.request({method:'eth_requestAccounts'});if(!ac||!ac[0])throw{};S.addr=ac[0];
+  if(d.provider.on)d.provider.on('accountsChanged',function(a){S.addr=a&&a[0]||null;paintWallet()});
+  $('wsheet').hidden=true;paintWallet();toast('Connected '+d.info.name+'. The demo does not use your wallet.')}
+ catch(e){$('wsheet').hidden=true;toast(e&&e.code===-32002?'A request is already open. Check your wallet extension.':e&&e.code===4001?'Connection was cancelled.':'Could not connect to the wallet.')}}
+async function openWallet(){
+ if(S.addr){S.addr=null;paintWallet();return toast('Disconnected from the app.')}
+ discover();await new Promise(function(r){setTimeout(r,300)});var l=wallets();
+ if(l.length===1)return connect(l[0]);
+ if(l.length>1){W.shown=l;return sheet('<h3>Choose a wallet</h3><p class="muted">Pick the one you want to use. The demo does not need it.</p><div class="wlist">'+l.map(function(d,i){var ic=/^data:image\//.test(d.info.icon||'')?'<img src="'+esc(d.info.icon)+'" alt="" width="28" height="28">':'<span class="wdot"></span>';return'<button class="btn wopt" data-w="'+i+'">'+ic+esc(d.info.name)+'</button>'}).join('')+'</div>')}
+ sheet('<h3>No wallet detected</h3><p class="muted">Browser wallets can only reach pages they are allowed to run in. This preview is hosted inside a sandboxed frame, so your extension may not be able to see it even when it is installed.</p><ul class="wtips"><li>Unlock your wallet extension, then press Check again.</li><li>On mobile, open this page from your wallet app’s built-in browser.</li><li>The production frontend runs on its own domain and connects with wagmi.</li><li>You do not need a wallet to use the demo.</li></ul><div class="rowf end"><button class="btn" data-w="close">Close</button><button class="btn glow" data-w="retry">Check again</button></div>')}
+$('wallet').onclick=openWallet;discover();setTimeout(discover,800);
+document.addEventListener('click',function(e){var t=e.target;
+ if(t.closest('[data-more]')){$('more').hidden=false;return}
+ var w=t.closest('[data-w]');if(w){var v=w.dataset.w;if(v==='retry'){$('wsheet').hidden=true;openWallet()}else if(v==='close')$('wsheet').hidden=true;else if(W.shown[+v])connect(W.shown[+v]);return}
+ if(t.classList&&t.classList.contains('scrim'))t.hidden=true});
+addEventListener('keydown',function(e){if(e.key==='Escape'){$('more').hidden=true;$('wsheet').hidden=true}});
+
+/* landing polish: card spotlight, orb tilt, reveal */
+document.querySelectorAll('.card').forEach(function(c){c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect();c.style.setProperty('--x',e.clientX-r.left+'px');c.style.setProperty('--y',e.clientY-r.top+'px')})});
+if(!reduce){var orb=$('orb'),root=document.documentElement;addEventListener('pointermove',function(e){var x=e.clientX/innerWidth,y=e.clientY/innerHeight;root.style.setProperty('--mx',x*100+'%');root.style.setProperty('--my',y*60+'%');orb.style.setProperty('--ry',(x-.5)*24+'deg');orb.style.setProperty('--rx',(.5-y)*24+'deg')},{passive:true})}
+var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}})},{threshold:.15});
+document.querySelectorAll('.reveal,.rule').forEach(function(el){io.observe(el)});
+
+/* scroll storytelling: progress, parallax, and the layered stack */
+var tick=false,docEl=document.documentElement;
+function onScroll(){var y=scrollY,mx=docEl.scrollHeight-innerHeight;docEl.style.setProperty('--sy',Math.min(y,1400));docEl.style.setProperty('--p',mx>0?y/mx:0);tick=false}
+addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(onScroll)}},{passive:true});
+var stepEls=document.querySelectorAll('.step'),layerEls=document.querySelectorAll('.layer'),legEls=document.querySelectorAll('#legend li');
+function setStep(n){stepEls.forEach(function(x){x.classList.toggle('on',+x.dataset.s===n)});
+ layerEls.forEach(function(l){var i=+l.dataset.l;l.classList.toggle('on',i<=n);l.classList.toggle('cur',i===n)});
+ legEls.forEach(function(l){var i=+l.dataset.l;l.classList.toggle('on',i<=n);l.classList.toggle('cur',i===n)})}
+var so=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting)setStep(+en.target.dataset.s)})},{rootMargin:'-45% 0px -45% 0px'});
+stepEls.forEach(function(x){so.observe(x)});setStep(1);
+/* connect to the shared ledger (db capability); degrade to local session */
+(async function(){
+ try{if(window.claude&&claude.use){var u=await claude.use('user'),d=await claude.use('db');S.uid=u&&u.id?await u.id():null;S.db=d}}catch(e){}
+ if(S.db&&S.uid){S.live=true;var err=function(){S.live=false;paint()};
+  S.db.collection('data/users/'+S.uid).doc('account').onSnapshot(function(s){S.acct=s.exists?Object.assign(blank(),s.data()):blank();paint()},err);
+  S.db.collection('events').orderBy('ts','desc').limit(1000).onSnapshot(function(q){S.ev=q.docs.map(function(d){return d.data()});paint()},err)}
+ paint()})();
+route();
+})();
+</script>
+</body>
+</html>
